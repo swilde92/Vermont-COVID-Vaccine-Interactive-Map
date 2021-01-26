@@ -1,0 +1,38 @@
+---
+title: "Interactive_Plot_Week2"
+author: "SarahLynn"
+date: "1/26/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE, messages=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(tidyr)
+library(dplyr)
+library(leaflet)
+```
+
+## COVID vaccine data for Vermont, as of 1/17/2021 
+
+This is a map of COVID vaccines in Vermont as of 1/17/2021. The size of the circle on each county represents the dose per population for that county. If you hover on a popup, you can see the county name and the covid vaccine count for Dose 1 of the vaccine, in that county. 
+
+```{r covidVT, echo=FALSE, message=FALSE}
+data <- read.csv("C:/Users/Sarah Lynn/Desktop/Self Study/Coursera DS JH - developing data products/Week 2 Interactice Plot Project/Dataset for week 2 project.csv")
+data <- as.data.frame(data)
+data1 <- data %>%
+  mutate(dosepp = Dose1/Population)
+  
+  
+  
+data1 %>%
+  leaflet() %>%
+  addTiles %>% 
+   addMarkers(~longitude, ~latitude, popup = ~paste(data1$County,":","","Vaccine count=",data1$Dose1)) %>%
+  addCircles(weight=1,radius=sqrt(data1$dosepp*1000000000),color=data1$col) %>%
+  addLegend(labels=data$County,colors=data$col)
+  
+```
+
+Data is sourced from https://catalog.data.gov/dataset/vt-covid-vaccine-data-by-dose
+
